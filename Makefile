@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -Wextra
-OBJFILES=chunk.o memory.o main.o debug.o
+OBJFILES=chunk.o memory.o main.o debug.o value.o
 
 miri: $(OBJFILES)
 	$(CC) $(CFLAGS) $(OBJFILES) -o miri
@@ -16,6 +16,9 @@ memory.o: memory.c memory.h
 
 debug.o: debug.c debug.h
 	$(CC) $(CFLAGS) -c debug.c
+
+value.o: value.c value.h
+	$(CC) $(CFLAGS) -c value.c
 
 .PHONY: clean
 clean:
