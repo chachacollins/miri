@@ -1,29 +1,73 @@
+#include <assert.h>
 #include "common.h"
 #include "chunk.h"
 #include "debug.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "vm.h"
+
+static void repl(void)
+{
+    char line[1024];
+    for(;;)
+    {
+        printf("> ");
+        fflush(stdout);
+        if(!fgets(line, sizeof(line), stdin))
+        {
+            printf("\n");
+            break;
+        }
+        interpret(line);
+    }
+}
+
+static char *read_file(const char* filepath)
+{
+    FILE *file = fopen(filepath, "rb");
+    if(!file)
+    {
+        perror("ERROR: ");
+        exit(EXIT_FAILURE);
+    }
+    fseek(file, 0, SEEK_END);
+    size_t file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char *buffer = malloc(file_size + 1);
+    assert(buffer);
+    size_t bytes_read = fread(buffer, sizeof(char), file_size, file);
+    assert(bytes_read == file_size);
+    buffer[bytes_read] = '\0';
+    fclose(file);
+    return buffer;
+}
+
+static void run_file(const char *filepath)
+{
+    char *source = read_file(filepath);
+    InterpretResult result = interpret(source);
+    free(source);
+    if (result == INTERPRET_COMPILE_ERROR) exit(EXIT_FAILURE);
+    if (result == INTERPRET_RUNTIME_ERROR) exit(EXIT_FAILURE);
+}
 
 int main(int argc, char *argv[])
 {
     init_vm();
-    Chunk chunk;
-    init_chunk(&chunk);
-    int constant = add_constant(&chunk, 1.2);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
-    constant = add_constant(&chunk, 3.4);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
-    write_chunk(&chunk, OP_ADD, 123);
-    constant = add_constant(&chunk, 5.6);
-    write_chunk(&chunk, OP_CONSTANT, 123);
-    write_chunk(&chunk, constant, 123);
-    write_chunk(&chunk, OP_DIVIDE, 123);
-    write_chunk(&chunk, OP_NEGATE, 123);
-    write_chunk(&chunk, OP_RETURN, 123);
-    disassemble_chunk(&chunk, "test-chunk");
-    interpret(&chunk);
+    if(argc == 1)
+    {
+        repl();
+    }
+    else if(argc == 2)
+    {
+        run_file(argv[1]);
+    }
+    else
+    {
+        fprintf(stderr, "USAGE: miri [path]\n");
+        return EXIT_FAILURE;
+    }
     free_vm();
-    free_chunk(&chunk);
-    return 0;
+    return EXIT_SUCCESS;
 }

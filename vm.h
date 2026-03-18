@@ -24,6 +24,6 @@ void init_vm(void);
 void free_vm(void);
 void push(Value value);
 Value pop(void);
-InterpretResult interpret(Chunk *chunk);
+InterpretResult interpret(const char *source);
 
 #endif
