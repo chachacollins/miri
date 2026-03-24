@@ -130,7 +130,7 @@ static TokenType identifier_type(void)
             {
                 switch(scanner.start[1])
                 {
-                    case 'a': return check_keyword(2, 3, "false", TOKEN_FALSE);
+                    case 'a': return check_keyword(2, 3, "lse", TOKEN_FALSE);
                     case 'o': return check_keyword(2, 1, "r", TOKEN_FOR);
                     case 'u': return check_keyword(2, 1, "n", TOKEN_FUN);
                 }
