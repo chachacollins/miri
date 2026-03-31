@@ -1,6 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 #include "common.h"
+#include "object.h"
 
 #define ALLOCATE(type, count) \
     (type*)reallocate(NULL, 0, sizeof(type) * (count))
@@ -14,6 +15,9 @@
 #define FREE_ARRAY(type, pointer, old_count) \
     reallocate(pointer, sizeof(type) * old_count, 0)
 
-void *reallocate(void *pointer, size_t old_size, size_t new_size);
+#define FREE(type, pointer) reallocate(pointer, sizeof(type), 0)
 
+
+void *reallocate(void *pointer, size_t old_size, size_t new_size);
+void free_objects(void);
 #endif

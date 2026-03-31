@@ -12,6 +12,7 @@ VM vm;
 
 static void reset_stack(void)
 {
+    vm.objects = NULL;
     vm.stack_top = vm.stack;
 }
 
@@ -36,6 +37,7 @@ void init_vm(void)
 
 void free_vm(void)
 {
+    free_objects();
 }
 
 void push(Value value)
