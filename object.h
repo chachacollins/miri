@@ -2,6 +2,7 @@
 #define OBJECT_H
 #include "object.h"
 #include "value.h"
+#include <stdint.h>
 
 #define OBJ_TYPE(value)        (AS_OBJ(value)->type)
 #define IS_STRING(value)       is_ObjType(value, OBJ_STRING)
@@ -24,6 +25,7 @@ struct ObjString
     Obj obj;
     char *chars;
     int length;
+    uint32_t hash;
 };
 
 static inline bool is_ObjType(Value value, ObjType type) 
