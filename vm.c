@@ -32,11 +32,14 @@ static void runtime_error(const char *fmt, ...)
 
 void init_vm(void)
 {
+    vm.objects = NULL;
     reset_stack();
+    init_table(&vm.strings);
 }
 
 void free_vm(void)
 {
+    free_table(&vm.strings);
     free_objects();
 }
 
