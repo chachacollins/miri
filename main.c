@@ -3,14 +3,23 @@
 #include "chunk.h"
 #include "debug.h"
 #include <stdio.h>
+#ifdef READLINE
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif
 #include <stdlib.h>
 #include "vm.h"
 
 static void repl(void)
 {
-    char line[1024];
+    char buffer[1024];
+    char *line = buffer;
     for(;;)
     {
+#ifdef READLINE
+        line = readline("> ");
+        assert(line);
+#else
         printf("> ");
         fflush(stdout);
         if(!fgets(line, sizeof(line), stdin))
@@ -18,7 +27,12 @@ static void repl(void)
             printf("\n");
             break;
         }
+#endif
         interpret(line);
+
+#ifdef READLINE
+        free(line);
+#endif
     }
 }
 
