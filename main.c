@@ -12,7 +12,7 @@
 
 static void repl(void)
 {
-    char buffer[1024];
+    char buffer[1024] = {0};
     char *line = buffer;
     for(;;)
     {
@@ -22,7 +22,7 @@ static void repl(void)
 #else
         printf("> ");
         fflush(stdout);
-        if(!fgets(line, sizeof(line), stdin))
+        if(!fgets(line, sizeof(buffer), stdin))
         {
             printf("\n");
             break;

@@ -151,7 +151,8 @@ static TokenType identifier_type(void)
                 }
             }
             break;
-        case 'v': return check_keyword(1, 2, "ar", TOKEN_VAR);
+        case 'v': 
+            return check_keyword(1, 2, "ar", TOKEN_VAR);
         case 'w': return check_keyword(1, 4, "hile", TOKEN_WHILE);
     }
     return TOKEN_IDENTIFIER;
