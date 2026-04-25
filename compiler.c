@@ -150,9 +150,9 @@ static void end_compiler(void)
 #endif
 }
 
-static void expression();
-static void statement();
-static void declaration();
+static void expression(void);
+static void statement(void);
+static void declaration(void);
 static ParseRule *get_rule(TokenType type);
 static void parse_precedence(Precedence precedence);
 
@@ -302,9 +302,34 @@ static void print_statement(void)
     emit_byte(OP_PRINT);
 }
 
+static void synchronize(void)
+{
+    parser.panic_mode = false;
+    while (parser.current.type != TOKEN_EOF)
+    {
+        if (parser.previous.type == TOKEN_SEMICOLON) return;
+        switch (parser.current.type)
+        {
+            case TOKEN_CLASS:
+            case TOKEN_FUN:
+            case TOKEN_VAR:
+            case TOKEN_FOR:
+            case TOKEN_IF:
+            case TOKEN_WHILE:
+            case TOKEN_PRINT:
+            case TOKEN_RETURN:
+                return;
+            default: ; //DO NOTHING
+        }
+        advance();
+    }
+}
+
 static void declaration(void)
 {
     statement();
+
+    if (parser.panic_mode) synchronize();
 }
 
 static void statement(void)
