@@ -130,7 +130,7 @@ InterpretResult run()
             case OP_GREATER:  BINARY_OP(BOOL_VAL, >); break;
             case OP_LESS:     BINARY_OP(BOOL_VAL, <); break;
             case OP_ADD:
-            {  
+            {
                 if(IS_STRING(peek(0)) && IS_STRING(peek(1)))
                 {
                     concatenate();
@@ -160,10 +160,14 @@ InterpretResult run()
                 push(BOOL_VAL(values_equal(a,b)));
                 break;
             }
-            case OP_RETURN:
+            case OP_PRINT:
             {
                 print_value(pop());
                 printf("\n");
+                break;
+            }
+            case OP_RETURN:
+            {
                 return INTERPRET_OK;
             }
         }
