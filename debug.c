@@ -18,6 +18,13 @@ static int simple_instruction(const char *name, int offset)
     return offset + 1;
 }
 
+static int byte_instruction(const char *name, Chunk *chunk, int offset)
+{
+    uint8_t slot = chunk->code[offset + 1];
+    printf("%-16s %4d\n", name, slot);
+    return offset + 2; 
+}
+
 int disassemble_instruction(Chunk *chunk, int offset)
 {
     printf("%04d ", offset);
@@ -73,6 +80,10 @@ int disassemble_instruction(Chunk *chunk, int offset)
         case OP_SET_GLOBAL:
             return constant_instruction("OP_SET_GLOBAL", chunk,
                                          offset);
+        case OP_GET_LOCAL:
+            return byte_instruction("OP_GET_LOCAL", chunk, offset);
+        case OP_SET_LOCAL:
+            return byte_instruction("OP_SET_LOCAL", chunk, offset);
         default:
             printf("Unknown opcode %d\n", instruction);
             return offset + 1;
